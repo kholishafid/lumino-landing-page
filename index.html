@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="./assets/fonts/epilogue-v20-latin/style.css">
+  <link href="./assets/css/main.css" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="./assets/images/image.png" />
+  <title>Lumino - Note taking app</title>
+  <meta name="title" content="Lumino">
+  <meta name="description"
+    content="Your to-do list, minus the doom and gloom. Organize your day, chase your little goals, and celebrate every checkbox">
+  <meta name="keywords" content="todo list app, todo, lumino, checklist note, todo list app, task tracker">
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="language" content="English">
+  <meta name="author" content="kholishafid">
+
+  <meta property="og:image" content="https://lumino.kholishafid.com/assets/images/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:secure_url" content="https://lumino.kholishafid.com/assets/images/og-image.png" />
+  <meta property="og:image:alt"
+    content="Your to-do list, minus the doom and gloom. Organize your day, chase your little goals, and celebrate every checkbox" />
+</head>
+
+<body>
+  <div class="screen_wrapper">
+    <div class="navbar">
+      <span class="navbar_brand">Lumino</span>
+      <div class="navbar_menu">
+        <div class="btn-sm btn-subtle">
+          <span>Login</span>
+        </div>
+        <div class="btn-sm btn-primary">
+          <span>Get start free</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="headline_wrapper">
+        <h1 class="headline" id="headline">
+          Plot twist: you actually got things done.
+        </h1>
+        <img src="./assets/images/checkmark.png" alt="checkmark" hidden />
+      </div>
+      <span class="subheadline">
+        Your to-do list, minus the doom and gloom. Organize your day, chase your little goals,
+        and celebrate every checkbox
+      </span>
+      <div class="btn btn-primary"><span>Get start free</span></div>
+      <div class="hero_image_wrapper">
+        <img src="./assets/images/man_jumping.png" alt="Man Jumping" class="man_jumping char-illustration" />
+        <img src="./assets/images/woman_with_phone.png" alt="Woman with Phone" class="woman_with_phone" />
+        <div class="hero_image_container">
+          <img src="./assets/images/v4_31.png" alt="Image" class="hero_image char-illustration" />
+        </div>
+      </div>
+      <div class="background-gradient"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/motion@11.18.2/dist/motion.js"></script>
+  <script>
+    const { animate, stagger } = Motion;
+    const headline = document.getElementById("headline");
+
+    const text = headline.textContent.trim();
+    headline.setAttribute("aria-label", text);
+    headline.innerHTML = text
+      .split(/\s+/)
+      .map(w => `<span class="word-mask" aria-hidden="true"><span class="word">${w}</span></span>`)
+      .join(" ");
+
+    const TOTAL_SPREAD = 1.25;
+    const ACCEL = 3;
+
+    async function reveal() {
+      headline.querySelector(".checkmark")?.remove();
+
+      const wordsAnim = animate(
+        ".word",
+        { y: ["-50%", "0%"], scale: [1.2, 1], opacity: [0, 1] },
+        {
+          duration: 0.7,
+          ease: [0.22, 1, 0.0, 1],
+          delay: (i, total) => {
+            const p = total > 1 ? i / (total - 1) : 0;
+            return TOTAL_SPREAD * (1 - Math.pow(1 - p, ACCEL));
+          }
+        }
+      );
+
+      const IMG_OFFSET = 0.5;
+      await new Promise(r => setTimeout(r, (TOTAL_SPREAD + IMG_OFFSET) * 1000));
+
+      const img = document.createElement("img");
+      img.className = "checkmark";
+      img.alt = "Checkmark";
+      img.src = "./assets/images/checkmark.png";
+      headline.append(" ", img);
+
+      animate(
+        img,
+        { scale: [0, 1], opacity: [0, 1] },
+        { type: "spring", stiffness: 300, damping: 14 }
+      );
+    }
+
+    reveal();
+  </script>
+</body>
+
+</html>
